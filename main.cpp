@@ -1,12 +1,21 @@
 #include "TXLib.h"
 
+void drawButton(int x, int y, const char* text)
+{
+    txSetColor(TX_BLACK, 4);
+    txSetFillColor(TX_YELLOW);
+    txSelectFont("Comic Sans MS", 40);
+    txRectangle(x, y, x + 200, y + 100);
+    txDrawText (x, y, x + 200, y + 100, text);
+}
+
 int main()
 {
     txCreateWindow(1200,800);
 
-    HDC nos1 = txLoadImage("���1.bmp");
-    HDC nos2 = txLoadImage("���2.bmp");
-    HDC nos3 = txLoadImage("���3.bmp");
+    HDC nos1 = txLoadImage("Íîñ1.bmp");
+    HDC nos2 = txLoadImage("Íîñ2.bmp");
+    HDC nos3 = txLoadImage("Íîñ3.bmp");
 
     while (!GetAsyncKeyState(VK_ESCAPE))
     {
@@ -18,9 +27,14 @@ int main()
         txTransparentBlt(txDC(), 0, 250, 100, 100, nos2, 0, 0, TX_WHITE);
         txTransparentBlt(txDC(), 0, 400, 100, 100, nos3, 0, 0, TX_WHITE);
 
-	    txSetColor(TX_BLACK);
+	      txSetColor(TX_BLACK);
         txSelectFont("Comic Sans MS", 60);
         txTextOut(200,700, "1");
+
+
+        drawButton(100, 0, "Óøè");
+        drawButton(300, 0, "Ïðè÷åñêè");
+
 
         txSleep(10);
         txEnd();
