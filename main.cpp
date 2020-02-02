@@ -13,9 +13,9 @@ int main()
 {
     txCreateWindow(1200,800);
 
-    HDC nos1 = txLoadImage("ГЌГ®Г±1.bmp");
-    HDC nos2 = txLoadImage("ГЌГ®Г±2.bmp");
-    HDC nos3 = txLoadImage("ГЌГ®Г±3.bmp");
+    HDC nos1 = txLoadImage("Нос1.bmp");
+    HDC nos2 = txLoadImage("Нос2.bmp");
+    HDC nos3 = txLoadImage("Нос3.bmp");
 
     while (!GetAsyncKeyState(VK_ESCAPE))
     {
@@ -27,14 +27,12 @@ int main()
         txTransparentBlt(txDC(), 0, 250, 100, 100, nos2, 0, 0, TX_WHITE);
         txTransparentBlt(txDC(), 0, 400, 100, 100, nos3, 0, 0, TX_WHITE);
 
-	      txSetColor(TX_BLACK);
+        txSetColor(TX_BLACK);
         txSelectFont("Comic Sans MS", 60);
         txTextOut(200,700, "1");
 
-
-        drawButton(100, 0, "Г“ГёГЁ");
-        drawButton(300, 0, "ГЏГ°ГЁГ·ГҐГ±ГЄГЁ");
-
+        drawButton(100, 0, "Уши");
+        drawButton(300, 0, "Прически");
 
         txSleep(10);
         txEnd();
