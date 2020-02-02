@@ -13,24 +13,36 @@ int main()
 {
     txCreateWindow(1200,800);
 
+    HDC nos1 = txLoadImage("√ç√Æ√±1.bmp");
+    HDC nos2 = txLoadImage("√ç√Æ√±2.bmp");
+    HDC nos3 = txLoadImage("√ç√Æ√±3.bmp");
+
     while (!GetAsyncKeyState(VK_ESCAPE))
     {
         txBegin();
-        txSetFillColor(TX_WHITE);
+        txSetFillColor(TX_YELLOW);
         txClear();
 
-        txSetColor(TX_BLACK);
+        txTransparentBlt(txDC(), 0, 100, 126, 104, nos1, 0, 0, TX_WHITE);
+        txTransparentBlt(txDC(), 0, 250, 100, 100, nos2, 0, 0, TX_WHITE);
+        txTransparentBlt(txDC(), 0, 400, 100, 100, nos3, 0, 0, TX_WHITE);
+
+	      txSetColor(TX_BLACK);
         txSelectFont("Comic Sans MS", 60);
         txTextOut(200,700, "1");
 
 
-        drawButton(100, 0, "”¯Ë");
-        drawButton(300, 0, "œË˜ÂÒÍË");
+        drawButton(100, 0, "√ì√∏√®");
+        drawButton(300, 0, "√è√∞√®√∑√•√±√™√®");
 
 
         txSleep(10);
         txEnd();
     }
+
+    txDeleteDC(nos1);
+    txDeleteDC(nos2);
+    txDeleteDC(nos3);
 
     return 0;
 }
