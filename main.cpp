@@ -32,27 +32,40 @@ struct Picture
     int x;
     int y;
     HDC image;
+    int width;
+    int height;
 };
+
+
+void drawPicture(Picture pct)
+{
+    Win32::TransparentBlt(txDC(), pct.x, pct.y, 100, 100, pct.image, 0, 0, pct.width, pct.height, TX_WHITE);
+}
 
 
 int main()
 {
     txCreateWindow(1200,800);
 
-    HDC nos1 = txLoadImage("Pictures/Нос/Нос1.bmp");
-    HDC nos2 = txLoadImage("Pictures/Нос/Нос2.bmp");
-    HDC nos3 = txLoadImage("Pictures/Нос/Нос3.bmp");
+
+    Picture leftPictures[10];
+    leftPictures[0] = {100, 100, txLoadImage("Pictures/ГЌГ®Г±/ГЌГ®Г±1.bmp"), 126, 104};
+    leftPictures[1] = {100, 250, txLoadImage("Pictures/ГЌГ®Г±/ГЌГ®Г±2.bmp"), 100, 100};
+    leftPictures[2] = {100, 400, txLoadImage("Pictures/ГЌГ®Г±/ГЌГ®Г±3.bmp"), 100, 100};
+    leftPictures[3] = {100, 100, txLoadImage("Pictures/Г‚Г®Г«Г®Г±Г»/Г‚Г®Г«Г®Г±Г»1.bmp"), 400, 283};
+    leftPictures[4] = {100, 250, txLoadImage("Pictures/Г‚Г®Г«Г®Г±Г»/Г‚Г®Г«Г®Г±Г»2.bmp"), 400, 309};
+    leftPictures[5] = {100, 400, txLoadImage("Pictures/Г‚Г®Г«Г®Г±Г»/Г‚Г®Г«Г®Г±Г»3.bmp"), 448, 558};
 
 
-    HDC volosy1 = txLoadImage("Pictures/Волосы/Волосы1.bmp");
-    HDC volosy2 = txLoadImage("Pictures/Волосы/Волосы2.bmp");
-    HDC volosy3 = txLoadImage("Pictures/Волосы/Волосы3.bmp");
 
     Button btn[10];
-    btn[0] = {100, 0, "Овал лица"};
-    btn[1] = {300, 0, "Уши"};
-    btn[2] = {500, 0, "Прически"};
-    btn[3] = {700, 0, "Глаза"};
+    btn[0] = {100, 0, "ГЋГўГ Г« Г«ГЁГ¶Г "};
+    btn[1] = {300, 0, "Г“ГёГЁ"};
+    btn[2] = {500, 0, "ГЏГ°ГЁГ·ГҐГ±ГЄГЁ"};
+    btn[3] = {700, 0, "ГѓГ«Г Г§Г "};
+
+    bool nosVisible = false;
+    bool volosyVisible = false;
 
     while (!GetAsyncKeyState(VK_ESCAPE))
     {
@@ -60,43 +73,54 @@ int main()
         txSetFillColor(TX_YELLOW);
         txClear();
 
-        txTransparentBlt(txDC(), 0, 100, 126, 104, nos1, 0, 0, TX_WHITE);
-        txTransparentBlt(txDC(), 0, 250, 100, 100, nos2, 0, 0, TX_WHITE);
-        txTransparentBlt(txDC(), 0, 400, 100, 100, nos3, 0, 0, TX_WHITE);
 
-        txSetColor(TX_BLACK);
-        txSelectFont("Comic Sans MS", 60);
-        txTextOut(200,700, "1");
-
-        //Рисование кнопок
+        //ГђГЁГ±Г®ГўГ Г­ГЁГҐ ГЄГ­Г®ГЇГ®ГЄ
         for (int nKnopki = 0; nKnopki < 4; nKnopki++)
         {
             drawButton(btn[nKnopki]);
         }
 
-        //Клик на кнопки
-        for (int nKnopki = 0; nKnopki < 4; nKnopki++)
+
+        //ГЌГ®Г±Г»
+        if (txMouseButtons() == 1 &&
+            txMouseX() >= btn2.x &&
+            txMouseX() <= btn2.x + 200 &&
+            txMouseY() >= btn2.y &&
+            txMouseY() <= btn2.y + 100)
         {
-            if (txMouseButtons() == 1 &&
-                txMouseX() >= btn[nKnopki].x &&
-                txMouseX() <= btn[nKnopki].x + 200 &&
-                txMouseY() >= btn[nKnopki].y &&
-                txMouseY() <= btn[nKnopki].y + 100)
-            {
-                txTransparentBlt(txDC(), 100, 100, 400, 283, volosy1, 0, 0, TX_WHITE);
-            }
+            nosVisible = true;
+            volosyVisible = false;
+        }
+
+        if (nosVisible)
+        {
+            drawPicture(leftPictures[0]);
+            drawPicture(leftPictures[1]);
+            drawPicture(leftPictures[2]);
+        }
+        if (volosyVisible)
+        {
+            drawPicture(leftPictures[3]);
+            drawPicture(leftPictures[4]);
+            drawPicture(leftPictures[5]);
+        }
+
+
+        //Г‚Г®Г«Г®Г±Г»
+        if (txMouseButtons() == 1 &&
+            txMouseX() >= btn3.x &&
+            txMouseX() <= btn3.x + 200 &&
+            txMouseY() >= btn3.y &&
+            txMouseY() <= btn3.y + 100)
+        {
+            nosVisible = false;
+            volosyVisible = true;
         }
 
         txSleep(10);
         txEnd();
     }
 
-    txDeleteDC(nos1);
-    txDeleteDC(nos2);
-    txDeleteDC(nos3);
-    txDeleteDC(volosy1);
-    txDeleteDC(volosy2);
-    txDeleteDC(volosy3);
 
     return 0;
 }
