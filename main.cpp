@@ -48,10 +48,11 @@ int main()
     HDC volosy2 = txLoadImage("Pictures/Волосы/Волосы2.bmp");
     HDC volosy3 = txLoadImage("Pictures/Волосы/Волосы3.bmp");
 
-    Button btn1 = {100, 0, "Овал лица"};
-    Button btn2 = {300, 0, "Уши"};
-    Button btn3 = {500, 0, "Прически"};
-    Button btn4 = {700, 0, "Глаза"};
+    Button btn[10];
+    btn[0] = {100, 0, "Овал лица"};
+    btn[1] = {300, 0, "Уши"};
+    btn[2] = {500, 0, "Прически"};
+    btn[3] = {700, 0, "Глаза"};
 
     while (!GetAsyncKeyState(VK_ESCAPE))
     {
@@ -67,19 +68,23 @@ int main()
         txSelectFont("Comic Sans MS", 60);
         txTextOut(200,700, "1");
 
-        drawButton(btn1);
-        drawButton(btn2);
-        drawButton(btn3);
-        drawButton(btn4);
-
-
-        if (txMouseButtons() == 1 &&
-            txMouseX() >= 500 &&
-            txMouseX() <= 700 &&
-            txMouseY() >= 0 &&
-            txMouseY() <= 100)
+        //Рисование кнопок
+        for (int nKnopki = 0; nKnopki < 4; nKnopki++)
         {
-            txTransparentBlt(txDC(), 100, 100, 400, 283, volosy1, 0, 0, TX_WHITE);
+            drawButton(btn[nKnopki]);
+        }
+
+        //Клик на кнопки
+        for (int nKnopki = 0; nKnopki < 4; nKnopki++)
+        {
+            if (txMouseButtons() == 1 &&
+                txMouseX() >= btn[nKnopki].x &&
+                txMouseX() <= btn[nKnopki].x + 200 &&
+                txMouseY() >= btn[nKnopki].y &&
+                txMouseY() <= btn[nKnopki].y + 100)
+            {
+                txTransparentBlt(txDC(), 100, 100, 400, 283, volosy1, 0, 0, TX_WHITE);
+            }
         }
 
         txSleep(10);
