@@ -49,19 +49,20 @@ int main()
 
 
     Picture leftPictures[10];
-    leftPictures[0] = {100, 100, txLoadImage("Pictures/Нос/Нос1.bmp"), 126, 104};
-    leftPictures[1] = {100, 250, txLoadImage("Pictures/Нос/Нос2.bmp"), 100, 100};
-    leftPictures[2] = {100, 400, txLoadImage("Pictures/Нос/Нос3.bmp"), 100, 100};
-    leftPictures[3] = {100, 100, txLoadImage("Pictures/Волосы/Волосы1.bmp"), 400, 283};
-    leftPictures[4] = {100, 250, txLoadImage("Pictures/Волосы/Волосы2.bmp"), 400, 309};
-    leftPictures[5] = {100, 400, txLoadImage("Pictures/Волосы/Волосы3.bmp"), 448, 558};
+    leftPictures[0] = {100, 100, txLoadImage("Pictures/ГЌГ®Г±/ГЌГ®Г±1.bmp"), 126, 104};
+    leftPictures[1] = {100, 250, txLoadImage("Pictures/ГЌГ®Г±/ГЌГ®Г±2.bmp"), 100, 100};
+    leftPictures[2] = {100, 400, txLoadImage("Pictures/ГЌГ®Г±/ГЌГ®Г±3.bmp"), 100, 100};
+    leftPictures[3] = {100, 100, txLoadImage("Pictures/Г‚Г®Г«Г®Г±Г»/Г‚Г®Г«Г®Г±Г»1.bmp"), 400, 283};
+    leftPictures[4] = {100, 250, txLoadImage("Pictures/Г‚Г®Г«Г®Г±Г»/Г‚Г®Г«Г®Г±Г»2.bmp"), 400, 309};
+    leftPictures[5] = {100, 400, txLoadImage("Pictures/Г‚Г®Г«Г®Г±Г»/Г‚Г®Г«Г®Г±Г»3.bmp"), 448, 558};
 
 
 
-    Button btn1 = {100, 0, "Овал лица"};
-    Button btn2 = {300, 0, "Носы"};
-    Button btn3 = {500, 0, "Прически"};
-    Button btn4 = {700, 0, "Глаза"};
+    Button btn[10];
+    btn[0] = {100, 0, "ГЋГўГ Г« Г«ГЁГ¶Г "};
+    btn[1] = {300, 0, "Г“ГёГЁ"};
+    btn[2] = {500, 0, "ГЏГ°ГЁГ·ГҐГ±ГЄГЁ"};
+    btn[3] = {700, 0, "ГѓГ«Г Г§Г "};
 
     bool nosVisible = false;
     bool volosyVisible = false;
@@ -73,12 +74,14 @@ int main()
         txClear();
 
 
-        drawButton(btn1);
-        drawButton(btn2);
-        drawButton(btn3);
-        drawButton(btn4);
+        //ГђГЁГ±Г®ГўГ Г­ГЁГҐ ГЄГ­Г®ГЇГ®ГЄ
+        for (int nKnopki = 0; nKnopki < 4; nKnopki++)
+        {
+            drawButton(btn[nKnopki]);
+        }
 
-        //Носы
+
+        //ГЌГ®Г±Г»
         if (txMouseButtons() == 1 &&
             txMouseX() >= btn2.x &&
             txMouseX() <= btn2.x + 200 &&
@@ -103,7 +106,7 @@ int main()
         }
 
 
-        //Волосы
+        //Г‚Г®Г«Г®Г±Г»
         if (txMouseButtons() == 1 &&
             txMouseX() >= btn3.x &&
             txMouseX() <= btn3.x + 200 &&
