@@ -1,46 +1,7 @@
 #include "TXLib.h"
+#include "Button.cpp"
+#include "Picture.cpp"
 
-struct Button
-{
-    int x;
-    int y;
-    const char* text;
-
-    void drawButton()
-    {
-        txSetColor(TX_BLACK, 4);
-        txSetFillColor(TX_YELLOW);
-        txSelectFont("Comic Sans MS", 40);
-        txRectangle(x, y, x + 200, y + 100);
-        txDrawText (x, y, x + 200, y + 100, text);
-    }
-};
-
-void drawButton(Button btn)
-{
-    txSetColor(TX_BLACK, 4);
-    txSetFillColor(TX_YELLOW);
-    txSelectFont("Comic Sans MS", 40);
-    txRectangle(btn.x, btn.y, btn.x + 200, btn.y + 100);
-    txDrawText (btn.x, btn.y, btn.x + 200, btn.y + 100, btn.text);
-}
-
-
-
-struct Picture
-{
-    int x;
-    int y;
-    HDC image;
-    int width;
-    int height;
-};
-
-
-void drawPicture(Picture pct)
-{
-    Win32::TransparentBlt(txDC(), pct.x, pct.y, 100, 100, pct.image, 0, 0, pct.width, pct.height, TX_WHITE);
-}
 
 
 int main()
@@ -48,24 +9,39 @@ int main()
     txCreateWindow(1200,800);
 
 
-    Picture leftPictures[10];
-    leftPictures[0] = {0, 100, txLoadImage("Pictures/Нос/Нос1.bmp"), 126, 104};
-    leftPictures[1] = {0, 250, txLoadImage("Pictures/Нос/Нос2.bmp"), 100, 100};
-    leftPictures[2] = {0, 400, txLoadImage("Pictures/Нос/Нос3.bmp"), 100, 100};
-    leftPictures[3] = {0, 100, txLoadImage("Pictures/Волосы/Волосы1.bmp"), 400, 283};
-    leftPictures[4] = {0, 250, txLoadImage("Pictures/Волосы/Волосы2.bmp"), 400, 309};
-    leftPictures[5] = {0, 400, txLoadImage("Pictures/Волосы/Волосы3.bmp"), 448, 558};
+    const int COUNT_PICS = 9;
+    Picture leftPictures[COUNT_PICS];
+    leftPictures[0] = {0, 100, txLoadImage("Pictures/Нос/Нос1.bmp"), 126, 104, false, "Нос"};
+    leftPictures[1] = {0, 250, txLoadImage("Pictures/Нос/Нос2.bmp"), 100, 100, false, "Нос"};
+    leftPictures[2] = {0, 400, txLoadImage("Pictures/Нос/Нос3.bmp"), 100, 100, false, "Нос"};
+    leftPictures[3] = {0, 100, txLoadImage("Pictures/Волосы/Волосы1.bmp"), 400, 283, false, "Волосы"};
+    leftPictures[4] = {0, 250, txLoadImage("Pictures/Волосы/Волосы2.bmp"), 400, 309, false, "Волосы"};
+    leftPictures[5] = {0, 400, txLoadImage("Pictures/Волосы/Волосы3.bmp"), 448, 558, false, "Волосы"};
+    leftPictures[6] = {0, 100, txLoadImage("Pictures/Глаза/Глаза1.bmp"), 250, 125, false, "Глаза"};
+    leftPictures[7] = {0, 250, txLoadImage("Pictures/Глаза/Глаза2.bmp"), 250, 134, false, "Глаза"};
+    leftPictures[8] = {0, 400, txLoadImage("Pictures/Глаза/Глаза3.bmp"), 250, 100, false, "Глаза"};
+
+
+
+    Picture centerPictures[COUNT_PICS];
+    centerPictures[0] = {200, 100, txLoadImage("Pictures/Нос/Нос1.bmp"), 126, 104, false, "Нос"};
+    centerPictures[1] = {200, 250, txLoadImage("Pictures/Нос/Нос2.bmp"), 100, 100, false, "Нос"};
+    centerPictures[2] = {200, 400, txLoadImage("Pictures/Нос/Нос3.bmp"), 100, 100, false, "Нос"};
+    centerPictures[3] = {200, 100, txLoadImage("Pictures/Волосы/Волосы1.bmp"), 400, 283, false, "Волосы"};
+    centerPictures[4] = {200, 250, txLoadImage("Pictures/Волосы/Волосы2.bmp"), 400, 309, false, "Волосы"};
+    centerPictures[5] = {200, 400, txLoadImage("Pictures/Волосы/Волосы3.bmp"), 448, 558, false, "Волосы"};
+    centerPictures[6] = {200, 100, txLoadImage("Pictures/Глаза/Глаза1.bmp"), 250, 125, false, "Глаза"};
+    centerPictures[7] = {200, 250, txLoadImage("Pictures/Глаза/Глаза2.bmp"), 250, 134, false, "Глаза"};
+    centerPictures[8] = {200, 400, txLoadImage("Pictures/Глаза/Глаза3.bmp"), 250, 100, false, "Глаза"};
 
 
 
     Button btn[10];
-    btn[0] = {100, 0, "Овал лица"};
-    btn[1] = {300, 0, "Носы"};
-    btn[2] = {500, 0, "Прически"};
-    btn[3] = {700, 0, "Глаза"};
+    btn[0] = {100, 0, "Овал лица", ""};
+    btn[1] = {300, 0, "Носы", "Нос"};
+    btn[2] = {500, 0, "Прически", "Волосы"};
+    btn[3] = {700, 0, "Глаза", "Глаза"};
 
-    bool nosVisible = false;
-    bool volosyVisible = false;
 
     while (!GetAsyncKeyState(VK_ESCAPE))
     {
@@ -81,40 +57,51 @@ int main()
         }
 
 
+        drawAllLeftPictures(leftPictures, COUNT_PICS);
+        drawAllCenterPictures(centerPictures, COUNT_PICS);
+
+
+        for (int nPict = 0; nPict < COUNT_PICS; nPict++)
+        {
+            if (txMouseButtons() == 1 &&
+                leftPictures[nPict].visible &&
+                txMouseX() >= leftPictures[nPict].x &&
+                txMouseX() <= leftPictures[nPict].x + 100 &&
+                txMouseY() >= leftPictures[nPict].y &&
+                txMouseY() <= leftPictures[nPict].y + 100)
+            {
+
+                for (int n1 = 0; n1 < COUNT_PICS; n1++)
+                {
+                    if (centerPictures[n1].category == centerPictures[nPict].category)
+                    {
+                        centerPictures[n1].visible = false;
+                    }
+                }
+
+                centerPictures[nPict].visible = !centerPictures[nPict].visible;
+                txSleep(100);
+            }
+        }
+
+
+
         //Клик на носы
-        if (txMouseButtons() == 1 &&
-            txMouseX() >= btn[1].x &&
-            txMouseX() <= btn[1].x + 200 &&
-            txMouseY() >= btn[1].y &&
-            txMouseY() <= btn[1].y + 100)
+        for (int nKnopki = 0; nKnopki < 4; nKnopki++)
         {
-            nosVisible = true;
-            volosyVisible = false;
+            if (click(btn[nKnopki]))
+            {
+                for (int nPict = 0; nPict < COUNT_PICS; nPict++)
+                {
+                    leftPictures[nPict].visible = false;
+                    if (leftPictures[nPict].category == btn[nKnopki].category)
+                    {
+                        leftPictures[nPict].visible = true;
+                    }
+                }
+            }
         }
 
-        //Клик на волосы
-        if (txMouseButtons() == 1 &&
-            txMouseX() >= btn[2].x &&
-            txMouseX() <= btn[2].x + 200 &&
-            txMouseY() >= btn[2].y &&
-            txMouseY() <= btn[2].y + 100)
-        {
-            nosVisible = false;
-            volosyVisible = true;
-        }
-
-        if (nosVisible)
-        {
-            drawPicture(leftPictures[0]);
-            drawPicture(leftPictures[1]);
-            drawPicture(leftPictures[2]);
-        }
-        if (volosyVisible)
-        {
-            drawPicture(leftPictures[3]);
-            drawPicture(leftPictures[4]);
-            drawPicture(leftPictures[5]);
-        }
 
 
         txSleep(10);
