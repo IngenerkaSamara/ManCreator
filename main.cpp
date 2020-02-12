@@ -1,7 +1,12 @@
 #include "TXLib.h"
 #include "Button.cpp"
 #include "Picture.cpp"
+#include <iostream>
+#include <locale>
 
+using namespace std;
+
+const int COUNT_BUTTONS = 5;
 
 
 int main()
@@ -9,17 +14,20 @@ int main()
     txCreateWindow(1200,800);
 
 
-    const int COUNT_PICS = 9;
+    const int COUNT_PICS = 12;
     Picture leftPictures[COUNT_PICS];
-    leftPictures[0] = {0, 100, "Pictures/Волосы/Волосы1.bmp", txLoadImage("Pictures/Волосы/Волосы1.bmp"), 0, 0, false, "Волосы"};
-    leftPictures[1] = {0, 250, "Pictures/Волосы/Волосы2.bmp", txLoadImage("Pictures/Волосы/Волосы2.bmp"), 0 , 0, false, "Волосы"};
-    leftPictures[2] = {0, 400, "Pictures/Волосы/Волосы3.bmp", txLoadImage("Pictures/Волосы/Волосы3.bmp"), 448, 558, false, "Волосы"};
-    leftPictures[3] = {0, 100, "Pictures/Нос/Нос1.bmp", txLoadImage("Pictures/Нос/Нос1.bmp"), 126, 104, false, "Нос"};
-    leftPictures[4] = {0, 250, "Pictures/Нос/Нос2.bmp", txLoadImage("Pictures/Нос/Нос2.bmp"), 100, 100, false, "Нос"};
-    leftPictures[5] = {0, 400, "Pictures/Нос/Нос3.bmp", txLoadImage("Pictures/Нос/Нос3.bmp"), 100, 100, false, "Нос"};
-    leftPictures[6] = {0, 100, "Pictures/Глаза/Глаза1.bmp", txLoadImage("Pictures/Глаза/Глаза1.bmp"), 250, 125, false, "Глаза"};
-    leftPictures[7] = {0, 250, "Pictures/Глаза/Глаза2.bmp", txLoadImage("Pictures/Глаза/Глаза2.bmp"), 250, 134, false, "Глаза"};
-    leftPictures[8] = {0, 400, "Pictures/Глаза/Глаза3.bmp", txLoadImage("Pictures/Глаза/Глаза3.bmp"), 250, 100, false, "Глаза"};
+    leftPictures[0] = {0, 100, "Pictures/Волосы/Волосы1.bmp"};
+    leftPictures[1] = {0, 250, "Pictures/Волосы/Волосы2.bmp"};
+    leftPictures[2] = {0, 400, "Pictures/Волосы/Волосы3.bmp"};
+    leftPictures[3] = {0, 100, "Pictures/Нос/Нос1.bmp"};
+    leftPictures[4] = {0, 250, "Pictures/Нос/Нос2.bmp"};
+    leftPictures[5] = {0, 400, "Pictures/Нос/Нос3.bmp"};
+    leftPictures[6] = {0, 100, "Pictures/Глаза/Глаза1.bmp"};
+    leftPictures[7] = {0, 250, "Pictures/Глаза/Глаза2.bmp"};
+    leftPictures[8] = {0, 400, "Pictures/Глаза/Глаза3.bmp"};
+    leftPictures[9] = {0, 100, "Pictures/Рот/Рот1.bmp"};
+    leftPictures[10] = {0, 250, "Pictures/Рот/Рот2.bmp"};
+    leftPictures[11] = {0, 400, "Pictures/Рот/Рот3.bmp"};
 
 
 
@@ -33,6 +41,9 @@ int main()
     centerPictures[6] = {300, 270};
     centerPictures[7] = {300, 270};
     centerPictures[8] = {300, 270};
+    centerPictures[9] = {300, 470};
+    centerPictures[10] = {300, 470};
+    centerPictures[11] = {300, 470};
 
     //Ширина и высота
     for (int nPict = 0; nPict < COUNT_PICS; nPict++)
@@ -41,6 +52,15 @@ int main()
         leftPictures[nPict].height = 100;
         leftPictures[nPict].src_width = getWidth(leftPictures[nPict].adress);
         leftPictures[nPict].src_height = getHeight(leftPictures[nPict].adress);
+        leftPictures[nPict].image = txLoadImage(leftPictures[nPict].adress.c_str());
+        leftPictures[nPict].visible = false;
+
+        string stroka = leftPictures[nPict].adress;
+        int pos_x = stroka.find("/");
+        int pos_y = stroka.find("/", pos_x + 1);
+        leftPictures[nPict].category = stroka.substr(pos_x + 1, pos_y - pos_x - 1);
+
+
         centerPictures[nPict].category = leftPictures[nPict].category;
         centerPictures[nPict].visible = false;
         centerPictures[nPict].adress = leftPictures[nPict].adress;
@@ -53,11 +73,12 @@ int main()
 
 
 
-    Button btn[10];
+    Button btn[COUNT_BUTTONS];
     btn[0] = {100, 0, "Овал лица", ""};
     btn[1] = {300, 0, "Носы", "Нос"};
     btn[2] = {500, 0, "Прически", "Волосы"};
     btn[3] = {700, 0, "Глаза", "Глаза"};
+    btn[4] = {900, 0, "Рты", "Рот"};
 
     int nomer_vybora = -1;
     bool mouseDown = false;
@@ -73,7 +94,7 @@ int main()
 
 
         //Рисование кнопок
-        for (int nKnopki = 0; nKnopki < 4; nKnopki++)
+        for (int nKnopki = 0; nKnopki < COUNT_BUTTONS; nKnopki++)
         {
             drawButton(btn[nKnopki]);
         }
@@ -113,33 +134,7 @@ int main()
                 mouseDown = true;
             }
 
-            if (GetAsyncKeyState(VK_LEFT))
-            {
-                centerPictures[nomer_vybora].x -= 3;
-            }
-            if (GetAsyncKeyState(VK_RIGHT))
-            {
-                centerPictures[nomer_vybora].x += 3;
-            }
-            if (GetAsyncKeyState(VK_UP))
-            {
-                centerPictures[nomer_vybora].y -= 3;
-            }
-            if (GetAsyncKeyState(VK_DOWN))
-            {
-                centerPictures[nomer_vybora].y += 3;
-            }
-
-            if (GetAsyncKeyState(VK_OEM_PLUS) && centerPictures[nomer_vybora].width < 600)
-            {
-                centerPictures[nomer_vybora].width = centerPictures[nomer_vybora].width * 1.02;
-                centerPictures[nomer_vybora].height = centerPictures[nomer_vybora].height * 1.02;
-            }
-            if (GetAsyncKeyState(VK_OEM_MINUS) && centerPictures[nomer_vybora].width > 20)
-            {
-                centerPictures[nomer_vybora].width = centerPictures[nomer_vybora].width * 0.98;
-                centerPictures[nomer_vybora].height = centerPictures[nomer_vybora].height * 0.98;
-            }
+            movePicture(centerPictures, nomer_vybora);
         }
 
 
@@ -169,7 +164,7 @@ int main()
 
 
         //Клик на носы
-        for (int nKnopki = 0; nKnopki < 4; nKnopki++)
+        for (int nKnopki = 0; nKnopki < COUNT_BUTTONS; nKnopki++)
         {
             if (click(btn[nKnopki]))
             {
@@ -190,13 +185,7 @@ int main()
         txEnd();
     }
 
-
-    for (int nPict = 0; nPict < COUNT_PICS; nPict++)
-    {
-        txDeleteDC(centerPictures[nPict].image);
-        txDeleteDC(leftPictures[nPict].image);
-    }
-
+    deleteAll(leftPictures, centerPictures, COUNT_PICS);
 
     return 0;
 }

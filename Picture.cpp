@@ -60,3 +60,43 @@ void drawAllPictures(Picture leftPictures[], const int COUNT_PICS)
         drawPicture(leftPictures[nPict]);
     }
 }
+
+void deleteAll(Picture leftPictures[], Picture centerPictures[], const int COUNT_PICS)
+{
+    for (int nPict = 0; nPict < COUNT_PICS; nPict++)
+    {
+        txDeleteDC(centerPictures[nPict].image);
+        txDeleteDC(leftPictures[nPict].image);
+    }
+}
+
+void movePicture(Picture centerPictures[], int nomer_vybora)
+{
+    if (GetAsyncKeyState(VK_LEFT))
+    {
+        centerPictures[nomer_vybora].x -= 3;
+    }
+    if (GetAsyncKeyState(VK_RIGHT))
+    {
+        centerPictures[nomer_vybora].x += 3;
+    }
+    if (GetAsyncKeyState(VK_UP))
+    {
+        centerPictures[nomer_vybora].y -= 3;
+    }
+    if (GetAsyncKeyState(VK_DOWN))
+    {
+        centerPictures[nomer_vybora].y += 3;
+    }
+
+    if (GetAsyncKeyState(VK_OEM_PLUS) && centerPictures[nomer_vybora].width < 600)
+    {
+        centerPictures[nomer_vybora].width = centerPictures[nomer_vybora].width * 1.02;
+        centerPictures[nomer_vybora].height = centerPictures[nomer_vybora].height * 1.02;
+    }
+    if (GetAsyncKeyState(VK_OEM_MINUS) && centerPictures[nomer_vybora].width > 20)
+    {
+        centerPictures[nomer_vybora].width = centerPictures[nomer_vybora].width * 0.98;
+        centerPictures[nomer_vybora].height = centerPictures[nomer_vybora].height * 0.98;
+    }
+}
