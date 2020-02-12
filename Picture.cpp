@@ -1,11 +1,14 @@
 #include "TXLib.h"
-#include <iostream>
 #include <conio.h>
+#include <dirent.h>
 #include <fstream>
-#include<stdio.h>
-#include<stdlib.h>
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+//#include <string.h>
 
 using namespace std;
+
 
 struct Picture
 {
@@ -20,6 +23,30 @@ struct Picture
     int width;
     int height;
 };
+
+int readFromDirectory(string adress, Picture leftPictures[], int COUNT_PICS)
+{
+    DIR *dfd;
+    struct dirent *dp;
+    dfd=opendir(adress.c_str());
+    int lastY = 100;
+
+    while((dp=readdir(dfd)) != NULL )
+    {
+        if (strlen(dp->d_name) > 4)
+        {
+            leftPictures[COUNT_PICS].y = lastY;
+            leftPictures[COUNT_PICS].adress = adress + (string)(dp->d_name);
+            COUNT_PICS++;
+            lastY += 150;
+        }
+    }
+
+    closedir(dfd);
+
+    return COUNT_PICS;
+}
+
 
 int getHeight(string adress)
 {

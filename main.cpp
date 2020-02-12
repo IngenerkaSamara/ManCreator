@@ -5,9 +5,12 @@
 #include <fstream>
 #include <locale>
 
+
 using namespace std;
 
-const int COUNT_BUTTONS = 5;
+const int COUNT_BUTTONS = 7;
+const int LOAD_BUTTON = COUNT_BUTTONS - 2;
+const int SAVE_BUTTON = COUNT_BUTTONS - 1;
 
 
 int main()
@@ -15,40 +18,23 @@ int main()
     txCreateWindow(1200,800);
 
 
-    const int COUNT_PICS = 12;
-    Picture leftPictures[COUNT_PICS];
-    leftPictures[0] = {0, 100, "Pictures/Волосы/Волосы1.bmp"};
-    leftPictures[1] = {0, 250, "Pictures/Волосы/Волосы2.bmp"};
-    leftPictures[2] = {0, 400, "Pictures/Волосы/Волосы3.bmp"};
-    leftPictures[3] = {0, 100, "Pictures/Нос/Нос1.bmp"};
-    leftPictures[4] = {0, 250, "Pictures/Нос/Нос2.bmp"};
-    leftPictures[5] = {0, 400, "Pictures/Нос/Нос3.bmp"};
-    leftPictures[6] = {0, 100, "Pictures/Глаза/Глаза1.bmp"};
-    leftPictures[7] = {0, 250, "Pictures/Глаза/Глаза2.bmp"};
-    leftPictures[8] = {0, 400, "Pictures/Глаза/Глаза3.bmp"};
-    leftPictures[9] = {0, 100, "Pictures/Рот/Рот1.bmp"};
-    leftPictures[10] = {0, 250, "Pictures/Рот/Рот2.bmp"};
-    leftPictures[11] = {0, 400, "Pictures/Рот/Рот3.bmp"};
+    int COUNT_PICS = 0;
+    Picture leftPictures[1000];
+    Picture centerPictures[1000];
+
+
+    COUNT_PICS = readFromDirectory("Pictures/Волосы/", leftPictures, COUNT_PICS);
+    COUNT_PICS = readFromDirectory("Pictures/Нос/", leftPictures, COUNT_PICS);
+    COUNT_PICS = readFromDirectory("Pictures/Глаза/", leftPictures, COUNT_PICS);
+    COUNT_PICS = readFromDirectory("Pictures/Рот/", leftPictures, COUNT_PICS);
 
 
 
-    Picture centerPictures[COUNT_PICS];
-    centerPictures[0] = {200, 100};
-    centerPictures[1] = {200, 100};
-    centerPictures[2] = {200, 100};
-    centerPictures[3] = {350, 380};
-    centerPictures[4] = {350, 380};
-    centerPictures[5] = {350, 380};
-    centerPictures[6] = {300, 270};
-    centerPictures[7] = {300, 270};
-    centerPictures[8] = {300, 270};
-    centerPictures[9] = {300, 470};
-    centerPictures[10] = {300, 470};
-    centerPictures[11] = {300, 470};
 
     //Ширина и высота
     for (int nPict = 0; nPict < COUNT_PICS; nPict++)
     {
+        leftPictures[nPict].x = 10;
         leftPictures[nPict].width = 100;
         leftPictures[nPict].height = 100;
         leftPictures[nPict].src_width = getWidth(leftPictures[nPict].adress);
@@ -70,41 +56,40 @@ int main()
         centerPictures[nPict].src_height = leftPictures[nPict].src_height;
         centerPictures[nPict].width = centerPictures[nPict].src_width;
         centerPictures[nPict].height = centerPictures[nPict].src_height;
-    }
 
-
-
-    char buff[50];              // Сюда будем считывать текст
-    ifstream fin("1.txt");      // открыли файл для чтения
-    while (fin.good())
-    {
-        fin.getline(buff, 50); // считали строку из файла
-        int x = atoi(buff);
-        fin.getline(buff, 50); // считали строку из файла
-        int y = atoi(buff);
-        fin.getline(buff, 50); // считали строку из файла
-        string adress = (buff);
-
-        for (int nPict = 0; nPict < COUNT_PICS; nPict++)
+        if (centerPictures[nPict].category == "Волосы")
         {
-            if (centerPictures[nPict].adress == adress)
-            {
-                centerPictures[nPict].x = x;
-                centerPictures[nPict].y = y;
-                centerPictures[nPict].visible = true;
-            }
+            centerPictures[nPict].x = 200;
+            centerPictures[nPict].y = 100;
+        }
+        if (centerPictures[nPict].category == "Нос")
+        {
+            centerPictures[nPict].x = 350;
+            centerPictures[nPict].y = 380;
+        }
+        if (centerPictures[nPict].category == "Глаза")
+        {
+            centerPictures[nPict].x = 300;
+            centerPictures[nPict].y = 270;
+        }
+        if (centerPictures[nPict].category == "Рот")
+        {
+            centerPictures[nPict].x = 300;
+            centerPictures[nPict].y = 470;
         }
     }
-    fin.close();                //Закрыли файл
+
 
 
 
     Button btn[COUNT_BUTTONS];
     btn[0] = {100, 0, "Овал лица", ""};
-    btn[1] = {300, 0, "Носы", "Нос"};
-    btn[2] = {500, 0, "Прически", "Волосы"};
-    btn[3] = {700, 0, "Глаза", "Глаза"};
-    btn[4] = {900, 0, "Рты", "Рот"};
+    btn[1] = {250, 0, "Носы", "Нос"};
+    btn[2] = {400, 0, "Прически", "Волосы"};
+    btn[3] = {550, 0, "Глаза", "Глаза"};
+    btn[4] = {700, 0, "Рты", "Рот"};
+    btn[5] = {850, 0, "Загрузить", "Р"};
+    btn[6] = {1000, 0, "Сохранить", "Р"};
 
     int nomer_vybora = -1;
     bool mouseDown = false;
@@ -190,7 +175,7 @@ int main()
 
 
         //Клик на носы
-        for (int nKnopki = 0; nKnopki < COUNT_BUTTONS; nKnopki++)
+        for (int nKnopki = 0; nKnopki < COUNT_BUTTONS - 2; nKnopki++)
         {
             if (click(btn[nKnopki]))
             {
@@ -205,27 +190,73 @@ int main()
             }
         }
 
+        //Загрузить
+        if (click(btn[LOAD_BUTTON]))
+        {
+            string fileName = runFileDialog(false);
+            if (fileName != "")
+            {
+                for (int nPict = 0; nPict < COUNT_PICS; nPict++)
+                {
+                    centerPictures[nPict].visible = false;
+                }
 
+                char buff[50];              // Сюда будем считывать текст
+                ifstream fin(fileName);      // открыли файл для чтения
+                while (fin.good())
+                {
+                    fin.getline(buff, 50); // считали строку из файла
+                    int x = atoi(buff);
+                    fin.getline(buff, 50); // считали строку из файла
+                    int y = atoi(buff);
+                    fin.getline(buff, 50); // считали строку из файла
+                    string adress = (buff);
+
+                    for (int nPict = 0; nPict < COUNT_PICS; nPict++)
+                    {
+                        if (centerPictures[nPict].adress == adress)
+                        {
+                            centerPictures[nPict].x = x;
+                            centerPictures[nPict].y = y;
+                            centerPictures[nPict].visible = true;
+                        }
+                    }
+                }
+                fin.close();                //Закрыли файл
+            }
+        }
+
+
+        //Сохранить
+        if (click(btn[SAVE_BUTTON]))
+        {
+            string fileName = runFileDialog(true);
+            if (fileName != "")
+            {
+                ofstream fout; //Завели под файл переменную
+
+                fout.open(fileName); //Открыли файл для записи
+
+                for (int nPict = 0; nPict < COUNT_PICS; nPict++)
+                {
+                    if (centerPictures[nPict].visible)
+                    {
+                        fout << centerPictures[nPict].x << endl; //Что-то записали
+                        fout << centerPictures[nPict].y << endl;
+                        fout << centerPictures[nPict].adress << endl;
+                    }
+                }
+                fout.close();            //Закрыли файл
+
+                txMessageBox("Сохранено");
+            }
+        }
 
         txSleep(10);
         txEnd();
     }
 
     deleteAll(leftPictures, centerPictures, COUNT_PICS);
-
-    ofstream fout; //Завели под файл переменную
-    fout.open("1.txt"); //Открыли файл для записи
-
-    for (int nPict = 0; nPict < COUNT_PICS; nPict++)
-    {
-        if (centerPictures[nPict].visible)
-        {
-            fout << centerPictures[nPict].x << endl; //Что-то записали
-            fout << centerPictures[nPict].y << endl;
-            fout << centerPictures[nPict].adress << endl;
-        }
-    }
-    fout.close();            //Закрыли файл
 
     return 0;
 }
