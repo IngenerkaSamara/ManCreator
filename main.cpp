@@ -2,6 +2,7 @@
 #include "Button.cpp"
 #include "Picture.cpp"
 #include <iostream>
+#include <fstream>
 #include <locale>
 
 using namespace std;
@@ -70,6 +71,31 @@ int main()
         centerPictures[nPict].width = centerPictures[nPict].src_width;
         centerPictures[nPict].height = centerPictures[nPict].src_height;
     }
+
+
+
+    char buff[50];              // Сюда будем считывать текст
+    ifstream fin("1.txt");      // открыли файл для чтения
+    while (fin.good())
+    {
+        fin.getline(buff, 50); // считали строку из файла
+        int x = atoi(buff);
+        fin.getline(buff, 50); // считали строку из файла
+        int y = atoi(buff);
+        fin.getline(buff, 50); // считали строку из файла
+        string adress = (buff);
+
+        for (int nPict = 0; nPict < COUNT_PICS; nPict++)
+        {
+            if (centerPictures[nPict].adress == adress)
+            {
+                centerPictures[nPict].x = x;
+                centerPictures[nPict].y = y;
+                centerPictures[nPict].visible = true;
+            }
+        }
+    }
+    fin.close();                //Закрыли файл
 
 
 
@@ -186,6 +212,20 @@ int main()
     }
 
     deleteAll(leftPictures, centerPictures, COUNT_PICS);
+
+    ofstream fout; //Завели под файл переменную
+    fout.open("1.txt"); //Открыли файл для записи
+
+    for (int nPict = 0; nPict < COUNT_PICS; nPict++)
+    {
+        if (centerPictures[nPict].visible)
+        {
+            fout << centerPictures[nPict].x << endl; //Что-то записали
+            fout << centerPictures[nPict].y << endl;
+            fout << centerPictures[nPict].adress << endl;
+        }
+    }
+    fout.close();            //Закрыли файл
 
     return 0;
 }
