@@ -9,18 +9,27 @@
 using namespace std;
 
 const int COUNT_BUTTONS = 7;
-const int LOAD_BUTTON = COUNT_BUTTONS - 2;
-const int SAVE_BUTTON = COUNT_BUTTONS - 1;
+const int LOAD_BUTTON = COUNT_BUTTONS - 3;
+const int SAVE_BUTTON = COUNT_BUTTONS - 2;
+const int HELP_BUTTON = COUNT_BUTTONS - 1;
+
+const int PAGE_REDACTOR = 0;
+const int PAGE_HELP = 1;
 
 
 int main()
 {
-    txCreateWindow(1200,800);
+    txCreateWindow(1300,800);
 
+    txTextCursor (false);
+    txDisableAutoPause();
 
     int COUNT_PICS = 0;
     Picture leftPictures[1000];
     Picture centerPictures[1000];
+
+
+    int PAGE = PAGE_REDACTOR;
 
 
     COUNT_PICS = readFromDirectory("Pictures/Волосы/", leftPictures, COUNT_PICS);
@@ -83,13 +92,13 @@ int main()
 
 
     Button btn[COUNT_BUTTONS];
-    btn[0] = {100, 0, "Овал лица", ""};
-    btn[1] = {250, 0, "Носы", "Нос"};
-    btn[2] = {400, 0, "Прически", "Волосы"};
-    btn[3] = {550, 0, "Глаза", "Глаза"};
-    btn[4] = {700, 0, "Рты", "Рот"};
-    btn[5] = {850, 0, "Загрузить", "Р"};
-    btn[6] = {1000, 0, "Сохранить", "Р"};
+    btn[0] = {  50, 0, "Носы", "Нос"};
+    btn[1] = { 225, 0, "Прически", "Волосы"};
+    btn[2] = { 400, 0, "Глаза", "Глаза"};
+    btn[3] = { 575, 0, "Рты", "Рот"};
+    btn[4] = { 750, 0, "Загрузить", "Р"};
+    btn[5] = { 925, 0, "Сохранить", "Р"};
+    btn[6] = {1100, 0, "?", "Р"};
 
     int nomer_vybora = -1;
     bool mouseDown = false;
@@ -103,152 +112,193 @@ int main()
         txSetFillColor(TX_YELLOW);
         txClear();
 
-
-        //Рисование кнопок
-        for (int nKnopki = 0; nKnopki < COUNT_BUTTONS; nKnopki++)
+        if (PAGE == PAGE_REDACTOR)
         {
-            drawButton(btn[nKnopki]);
-        }
-
-
-        drawAllPictures(leftPictures, COUNT_PICS);
-        drawAllPictures(centerPictures, COUNT_PICS);
-
-
-        //Выбор картинки в центре
-        for (int nPict = 0; nPict < COUNT_PICS; nPict++)
-        {
-            if (txMouseButtons() == 1 &&
-                centerPictures[nPict].visible &&
-                txMouseX() >= centerPictures[nPict].x &&
-                txMouseX() <= centerPictures[nPict].x + centerPictures[nPict].width &&
-                txMouseY() >= centerPictures[nPict].y &&
-                txMouseY() <= centerPictures[nPict].y + centerPictures[nPict].height)
+            //Рисование кнопок
+            for (int nKnopki = 0; nKnopki < COUNT_BUTTONS; nKnopki++)
             {
-                nomer_vybora = nPict;
-                currentX = centerPictures[nPict].x - txMouseX();
-                currentY = centerPictures[nPict].y - txMouseY();
-                mouseDown = false;
-            }
-        }
-
-        //Движение
-        if (nomer_vybora >= 0)
-        {
-            if (txMouseButtons() == 1 && !mouseDown)
-            {
-                centerPictures[nomer_vybora].x = txMouseX() + currentX;
-                centerPictures[nomer_vybora].y = txMouseY() + currentY;
-            }
-            else if (txMouseButtons() != 1)
-            {
-                mouseDown = true;
+                drawButton(btn[nKnopki]);
             }
 
-            movePicture(centerPictures, nomer_vybora);
-        }
+
+            drawAllPictures(leftPictures, COUNT_PICS);
+            drawAllPictures(centerPictures, COUNT_PICS);
 
 
-        for (int nPict = 0; nPict < COUNT_PICS; nPict++)
-        {
-            if (txMouseButtons() == 1 &&
-                leftPictures[nPict].visible &&
-                txMouseX() >= leftPictures[nPict].x &&
-                txMouseX() <= leftPictures[nPict].x + 100 &&
-                txMouseY() >= leftPictures[nPict].y &&
-                txMouseY() <= leftPictures[nPict].y + 100)
+            //Выбор картинки в центре
+            for (int nPict = 0; nPict < COUNT_PICS; nPict++)
             {
-
-                for (int n1 = 0; n1 < COUNT_PICS; n1++)
+                if (txMouseButtons() == 1 &&
+                    centerPictures[nPict].visible &&
+                    txMouseX() >= centerPictures[nPict].x &&
+                    txMouseX() <= centerPictures[nPict].x + centerPictures[nPict].width &&
+                    txMouseY() >= centerPictures[nPict].y &&
+                    txMouseY() <= centerPictures[nPict].y + centerPictures[nPict].height)
                 {
-                    if (centerPictures[n1].category == centerPictures[nPict].category)
+                    nomer_vybora = nPict;
+                    currentX = centerPictures[nPict].x - txMouseX();
+                    currentY = centerPictures[nPict].y - txMouseY();
+                    mouseDown = false;
+                }
+            }
+
+            //Движение
+            if (nomer_vybora >= 0)
+            {
+                if (txMouseButtons() == 1 && !mouseDown)
+                {
+                    centerPictures[nomer_vybora].x = txMouseX() + currentX;
+                    centerPictures[nomer_vybora].y = txMouseY() + currentY;
+                }
+                else if (txMouseButtons() != 1)
+                {
+                    mouseDown = true;
+                }
+
+                movePicture(centerPictures, nomer_vybora);
+            }
+
+
+            for (int nPict = 0; nPict < COUNT_PICS; nPict++)
+            {
+                if (txMouseButtons() == 1 &&
+                    leftPictures[nPict].visible &&
+                    txMouseX() >= leftPictures[nPict].x &&
+                    txMouseX() <= leftPictures[nPict].x + 100 &&
+                    txMouseY() >= leftPictures[nPict].y &&
+                    txMouseY() <= leftPictures[nPict].y + 100)
+                {
+
+                    for (int n1 = 0; n1 < COUNT_PICS; n1++)
                     {
-                        centerPictures[n1].visible = false;
+                        if (centerPictures[n1].category == centerPictures[nPict].category)
+                        {
+                            centerPictures[n1].visible = false;
+                        }
                     }
-                }
 
-                centerPictures[nPict].visible = !centerPictures[nPict].visible;
-                txSleep(100);
-            }
-        }
-
-
-
-        //Клик на носы
-        for (int nKnopki = 0; nKnopki < COUNT_BUTTONS - 2; nKnopki++)
-        {
-            if (click(btn[nKnopki]))
-            {
-                for (int nPict = 0; nPict < COUNT_PICS; nPict++)
-                {
-                    leftPictures[nPict].visible = false;
-                    if (leftPictures[nPict].category == btn[nKnopki].category)
-                    {
-                        leftPictures[nPict].visible = true;
-                    }
+                    centerPictures[nPict].visible = !centerPictures[nPict].visible;
+                    txSleep(100);
                 }
             }
-        }
 
-        //Загрузить
-        if (click(btn[LOAD_BUTTON]))
-        {
-            string fileName = runFileDialog(false);
-            if (fileName != "")
+
+
+            //Клик на носы
+            for (int nKnopki = 0; nKnopki < COUNT_BUTTONS - 2; nKnopki++)
             {
-                for (int nPict = 0; nPict < COUNT_PICS; nPict++)
+                if (click(btn[nKnopki]))
                 {
-                    centerPictures[nPict].visible = false;
-                }
-
-                char buff[50];              // Сюда будем считывать текст
-                ifstream fin(fileName);      // открыли файл для чтения
-                while (fin.good())
-                {
-                    fin.getline(buff, 50); // считали строку из файла
-                    int x = atoi(buff);
-                    fin.getline(buff, 50); // считали строку из файла
-                    int y = atoi(buff);
-                    fin.getline(buff, 50); // считали строку из файла
-                    string adress = (buff);
-
                     for (int nPict = 0; nPict < COUNT_PICS; nPict++)
                     {
-                        if (centerPictures[nPict].adress == adress)
+                        leftPictures[nPict].visible = false;
+                        if (leftPictures[nPict].category == btn[nKnopki].category)
                         {
-                            centerPictures[nPict].x = x;
-                            centerPictures[nPict].y = y;
-                            centerPictures[nPict].visible = true;
+                            leftPictures[nPict].visible = true;
                         }
                     }
                 }
-                fin.close();                //Закрыли файл
             }
+
+            //Справка
+            if (click(btn[HELP_BUTTON]))
+            {
+                PAGE = PAGE_HELP;
+                btn[HELP_BUTTON].text = "Назад";
+                txSleep(500);
+            }
+
+            if (GetAsyncKeyState(VK_SNAPSHOT))
+            {
+                ScreenCapture(200, 100, 700, 600, "1.bmp", txWindow());
+                txMessageBox("Сохранено в 1.bmp");
+            }
+
+            //Загрузить
+            if (click(btn[LOAD_BUTTON]))
+            {
+                string fileName = runFileDialog(false);
+                if (fileName != "")
+                {
+                    for (int nPict = 0; nPict < COUNT_PICS; nPict++)
+                    {
+                        centerPictures[nPict].visible = false;
+                    }
+
+                    char buff[50];              // Сюда будем считывать текст
+                    ifstream fin(fileName);      // открыли файл для чтения
+                    while (fin.good())
+                    {
+                        fin.getline(buff, 50); // считали строку из файла
+                        int x = atoi(buff);
+                        fin.getline(buff, 50); // считали строку из файла
+                        int y = atoi(buff);
+                        fin.getline(buff, 50); // считали строку из файла
+                        string adress = (buff);
+
+                        for (int nPict = 0; nPict < COUNT_PICS; nPict++)
+                        {
+                            if (centerPictures[nPict].adress == adress)
+                            {
+                                centerPictures[nPict].x = x;
+                                centerPictures[nPict].y = y;
+                                centerPictures[nPict].visible = true;
+                            }
+                        }
+                    }
+                    fin.close();                //Закрыли файл
+                }
+            }
+
+
+            //Сохранить
+            if (click(btn[SAVE_BUTTON]))
+            {
+                string fileName = runFileDialog(true);
+                if (fileName != "")
+                {
+                    ofstream fout; //Завели под файл переменную
+
+                    fout.open(fileName); //Открыли файл для записи
+
+                    for (int nPict = 0; nPict < COUNT_PICS; nPict++)
+                    {
+                        if (centerPictures[nPict].visible)
+                        {
+                            fout << centerPictures[nPict].x << endl; //Что-то записали
+                            fout << centerPictures[nPict].y << endl;
+                            fout << centerPictures[nPict].adress << endl;
+                        }
+                    }
+                    fout.close();            //Закрыли файл
+
+                    txMessageBox("Сохранено");
+                }
+            }
+
         }
 
-
-        //Сохранить
-        if (click(btn[SAVE_BUTTON]))
+        else if (PAGE == PAGE_HELP)
         {
-            string fileName = runFileDialog(true);
-            if (fileName != "")
+            txSelectFont("Arial", 46);
+            txDrawText(0, 100, txGetExtentX(), txGetExtentY(),
+                "Конструктор лица человека.\n"
+                "Выбирай носы, рты, глаза и даже волосы\n"
+                "по вкусу - можно даже собственный фоторобот собрать!\n"
+                "Картинки движутся стрелочами и мышкой, даже можно\n"
+                "увеличить на '+' и уменьшить на '-'. Картинки можно\n"
+                "сохранять в txt-формате и загружать заново.\n"
+                "Можно сделать скриншот по клику на PrintScreen\n\n"
+                "Создатели: Миша и Миша"
+                );
+
+            //Справка
+            drawButton(btn[HELP_BUTTON]);
+            if (click(btn[HELP_BUTTON]))
             {
-                ofstream fout; //Завели под файл переменную
-
-                fout.open(fileName); //Открыли файл для записи
-
-                for (int nPict = 0; nPict < COUNT_PICS; nPict++)
-                {
-                    if (centerPictures[nPict].visible)
-                    {
-                        fout << centerPictures[nPict].x << endl; //Что-то записали
-                        fout << centerPictures[nPict].y << endl;
-                        fout << centerPictures[nPict].adress << endl;
-                    }
-                }
-                fout.close();            //Закрыли файл
-
-                txMessageBox("Сохранено");
+                PAGE = PAGE_REDACTOR;
+                btn[HELP_BUTTON].text = "?";
+                txSleep(500);
             }
         }
 
