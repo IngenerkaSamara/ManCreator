@@ -11,16 +11,13 @@
 using namespace std;
 
 const int COUNT_BUTTONS = 7;
-///Кнопка загрузки
+///КНопка загрузки
 const int LOAD_BUTTON = COUNT_BUTTONS - 3;
-///Кнопка сохранения
+///КНопка загрузки
 const int SAVE_BUTTON = COUNT_BUTTONS - 2;
-///Кнопка справки
 const int HELP_BUTTON = COUNT_BUTTONS - 1;
 
-///Режим редактора
 const int PAGE_REDACTOR = 0;
-///Режим справки
 const int PAGE_HELP = 1;
 
 
@@ -286,7 +283,6 @@ int main()
 
         }
 
-        ///Если в режиме справки, показываем справку
         else if (PAGE == PAGE_HELP)
         {
             txSelectFont("Arial", 46);

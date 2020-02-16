@@ -1,3 +1,5 @@
+/// \file Picture.cpp
+/// Картинка
 #include "TXLib.h"
 #include <conio.h>
 #include <dirent.h>
@@ -8,21 +10,36 @@
 
 using namespace std;
 
-
+///Картинка
 struct Picture
 {
+    ///Левая граница
     int x;
+    ///Верхняя граница
     int y;
+    ///АДрес bmp-файла
     string adress;
+    ///Картинка
     HDC image;
+    ///Ширина картинки в bmp-файле
     int src_width;
+    ///Высота картинки в bmp-файле
     int src_height;
+    ///Видимость
     bool visible;
+    ///Категория
     string category;
+    ///Ширина картинки на экране
     int width;
+    ///Высота картинки на экране
     int height;
 };
 
+///Чтение файлов из директории
+///\param adress АДрес директории
+///\param leftPictures Массив картинок
+///\param COUNT_PICS Текущее количество картинок
+///\return Новое количество картинок
 int readFromDirectory(string adress, Picture leftPictures[], int COUNT_PICS)
 {
     DIR *dfd;
@@ -87,6 +104,7 @@ void drawAllPictures(Picture leftPictures[], const int COUNT_PICS)
     }
 }
 
+///Удаление всех артинок из памяти
 void deleteAll(Picture leftPictures[], Picture centerPictures[], const int COUNT_PICS)
 {
     for (int nPict = 0; nPict < COUNT_PICS; nPict++)

@@ -1,13 +1,21 @@
+/// \file Button.cpp
+/// Кнопка
 #include "TXLib.h"
 
+///Кнопка
 struct Button
 {
+    ///Левая граница (ширина 150)
     int x;
+    ///Верхняя граница (высота 80)
     int y;
+    ///Текст
     const char* text;
+    ///Категория
     string category;
 };
 
+///Рисование кнопки
 void drawButton(Button btn)
 {
     txSetColor(TX_BLACK, 4);
@@ -17,6 +25,7 @@ void drawButton(Button btn)
     txDrawText (btn.x, btn.y, btn.x + 150, btn.y + 80, btn.text);
 }
 
+///Клик на кнопку
 bool click(Button btn)
 {
     if (txMouseButtons() == 1 &&
@@ -33,6 +42,7 @@ bool click(Button btn)
     }
 }
 
+///Диалог открытия / сохранения файла
 string runFileDialog(bool isSave)
 {
     string fileName = "";
