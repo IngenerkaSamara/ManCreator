@@ -235,7 +235,7 @@ bool SaveBMPFile(char *filename, HBITMAP bitmap, HDC bitmapDC, int width, int he
 bool ScreenCapture(int x, int y, int width, int height, char *filename, HWND hwnd) {
 
 
-    HDC hDC = Win32::GetDC(hwnd);
+    HDC hDC = GetDC(hwnd);
     HDC hDc = CreateCompatibleDC(hDC);
 
 
